@@ -1,4 +1,4 @@
-# 📝 Blog Frontend
+# 📝 Blog-Up Frontend
 
 This is the frontend part of a full-stack blog application built using **Next.js**, **React 19**, **Redux Toolkit**, **Material UI**, and **TypeScript**. The app allows users to view, create, update, and delete blog posts, as well as add comments.
 
@@ -19,21 +19,23 @@ This is the frontend part of a full-stack blog application built using **Next.js
 
 ## 🧰 Tech Stack
 
-* **Next.js 15**
-* **React 19**
+* **Next.js**
+* **React**
 * **Redux Toolkit**
 * **TypeScript**
 * **Material UI v7**
+* **Ant Design**
 * **Tailwind CSS**
 * **Emotion Styled Components**
 * **JWT Decode**
 * **lodash.debounce**
+* **WebSocket** for updating list of comments in realtime
 
 ## 📦 Installation
 
 ```bash
-git clone https://github.com/vlasiuk-anatolii/blog-front
-cd blog-front/front
+git clone https://github.com/vlasiuk-anatolii/blog-up-front
+cd blog-up-front
 npm install
 npm run dev
 ```
@@ -42,10 +44,11 @@ The app will be available at [http://localhost:3000](http://localhost:3000)
 
 ## ⚙️ Configuration
 
-Create a `.env` file in the `front/` directory with the following content:
+Create a `.env` file in the current directory with the following content:
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:3001
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6Lf**************************
 ```
 
 ## 📁 Project Structure
@@ -81,11 +84,6 @@ front/
 * [x] Error handling
 * [x] Search (basic)
 * [x] Responsive design
-
-## ➕ Optional Enhancements
-
-* [ ] Pagination
-* [ ] Lite Mode
 
 ## 📝 Notes
 
