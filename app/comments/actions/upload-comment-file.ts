@@ -1,10 +1,11 @@
-import { API_URL } from "@/app/common/constants/api";
+//import { API_URL } from "@/app/common/constants/api";
 
 export async function uploadCommentFile(commentId: number, file: File) {
 	const formData = new FormData();
 	formData.append("file", file);
 
-	const response = await fetch(`${API_URL}/comments/${commentId}/file`, {
+	//const response = await fetch(`${API_URL}/comments/${commentId}/file`, {
+	const response = await fetch(`/comments/${commentId}/file`, {
 		method: "POST",
 		body: formData,
 		credentials: "include",

@@ -2,7 +2,7 @@
 import { Box, Button, Modal, Stack, TextField, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import { usePosts } from "../../store/usePosts";
-import { API_URL } from "@/app/common/constants/api";
+//import { API_URL } from "@/app/common/constants/api";
 import { useAppSelector } from "../../store/hooks";
 
 const styles = {
@@ -86,7 +86,8 @@ export default function CreatePostModal({
 				return;
 			}
 			
-			const response = await fetch(`${API_URL}/recaptcha/verify`, {
+			//const response = await fetch(`${API_URL}/recaptcha/verify`, {
+			const response = await fetch(`/recaptcha/verify`, {
 				method: "POST",
 				credentials: "include",
 				headers: {
