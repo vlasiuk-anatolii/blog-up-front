@@ -21,14 +21,6 @@ const nextConfig: NextConfig = {
       }
     ]
   },
-  async rewrites() {
-    return [
-      {
-        source: '/:path*',
-        destination: 'http://blog-up-backend-v6-env.eba-mamhw7rc.eu-north-1.elasticbeanstalk.com/:path*',
-      },
-    ];
-  },
 };
 
 export default nextConfig;
