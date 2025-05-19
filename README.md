@@ -4,7 +4,7 @@ This is the frontend part of a full-stack blog application built using **Next.js
 
 ## 📽️ Demo
 
-[Watch demo video](https://www.loom.com/share/98375a90e2e04f7299d248bcc2dc1445?sid=3c083be6-1c94-46b2-905f-590d0c237a2b)
+[Watch demo video](https://www.loom.com)
 
 ## 🚀 Features
 
