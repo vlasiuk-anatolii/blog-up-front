@@ -14,6 +14,10 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'upload.wikimedia.org',
+      },
+       {
+        protocol: 'http',
+        hostname: 'blog-up-backend-v6-env.eba-mamhw7rc.eu-north-1.elasticbeanstalk.com',
       }
     ]
   }
