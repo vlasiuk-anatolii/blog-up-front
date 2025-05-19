@@ -66,7 +66,7 @@ export default function Comment({
 				.then((res) => res.text())
 				.then((data) => setTextContentFile(data))
 				.catch((err) =>
-					console.error("Не вдалося завантажити файл", err)
+					console.error("Unable to load file", err)
 				);
 		}
 	}, [fileName]);

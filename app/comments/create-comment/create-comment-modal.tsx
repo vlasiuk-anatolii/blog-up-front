@@ -12,7 +12,7 @@ import { useState, useRef, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { usePosts } from "../../store/usePosts";
 import { CloudUpload } from "@mui/icons-material";
-//import { API_URL } from "@/app/common/constants/api";
+import { API_URL } from "@/app/common/constants/api";
 import { uploadCommentFile } from "../actions/upload-comment-file";
 import { useAppSelector } from "@/app/store/hooks";
 import NextImage from "next/image";
@@ -203,8 +203,7 @@ export default function CreateCommentModal({
 				return;
 			}
 
-			//const response = await fetch(`${API_URL}/recaptcha/verify`, {
-			const response = await fetch(`/recaptcha/verify`, {
+			const response = await fetch(`${API_URL}/recaptcha/verify`, {
 				method: "POST",
 				credentials: "include",
 				headers: {

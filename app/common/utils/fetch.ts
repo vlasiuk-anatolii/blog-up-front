@@ -1,5 +1,5 @@
 
-//import { API_URL } from "../constants/api";
+import { API_URL } from "../constants/api";
 import { getErrorMessage } from "./errors";
 
 export interface CustomError {
@@ -15,8 +15,7 @@ export interface CustomError {
 
 export const post = async (path: string, data: FormData | object) => {
 	const body = data instanceof FormData ? Object.fromEntries(data.entries()) : data;
-	//const response = await fetch(`${API_URL}/${path}`, {
-	const response = await fetch(`/${path}`, {
+	const response = await fetch(`${API_URL}/${path}`, {
 		method: "POST",
 		headers: {
 					"Accept": "application/json",
@@ -42,10 +41,8 @@ export const get = async <T>(
 ): Promise<T | CustomError> => {
 	try {
 		const url = params
-			//? `${API_URL}/${path}?${params.toString()}`
-			? `/${path}?${params.toString()}`
-			//: `${API_URL}/${path}`;
-			: `/${path}`;
+			? `${API_URL}/${path}?${params.toString()}`
+			: `${API_URL}/${path}`;
  
 		const response = await fetch(url, {
 			credentials: 'include', 
@@ -75,8 +72,7 @@ export const get = async <T>(
 };
 
 export const deleteRequest = async (path: string, data?: object) => {
-	//const response = await fetch(`${API_URL}/${path}`, {
-	const response = await fetch(`/${path}`, {
+	const response = await fetch(`${API_URL}/${path}`, {
 		method: "DELETE",
 		headers: {
 			"Content-Type": "application/json",
@@ -95,8 +91,7 @@ export const deleteRequest = async (path: string, data?: object) => {
 };
 
 export const patch = async (path: string, data: object) => {
-	const response = await fetch(`/${path}`, {
-	//const response = await fetch(`${API_URL}/${path}`, {
+	const response = await fetch(`${API_URL}/${path}`, {
 		method: "PATCH",
 		headers: {
 			"Content-Type": "application/json",
