@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
 	Box,
 	Button,
@@ -237,9 +237,7 @@ export default function CreateCommentModal({
 					postId,
 					file as File
 				);
-
-				const uploadedData = await responseUploaded.json();
-				uploadedFilename = uploadedData.filename;
+				uploadedFilename = responseUploaded.filename;
 			}
 
 			await commentOnPost({

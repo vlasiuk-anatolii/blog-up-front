@@ -4,7 +4,7 @@ This is the frontend part of a full-stack blog application built using **Next.js
 
 ## 📽️ Demo
 
-[Watch demo video](https://www.loom.com)
+[Watch demo video](https://youtu.be/tDdf4KkAD3A)
 
 ## 🚀 Features
 
@@ -64,7 +64,6 @@ front/
 │ ├── search/ // Search functionality
 │ ├── store/ // Redux store and slices
 │ ├── dark.theme.ts // Custom MUI dark theme
-│ ├── favicon.ico // Favicon for the app
 │ └── globals.css // Global CSS styles
 ├── .next/ // Next.js build output (auto-generated)
 ├── package.json // Project metadata and dependencies
@@ -80,9 +79,18 @@ front/
 * [x] Edit a post
 * [x] Delete a post
 * [x] Add comments to a post
+* [x] Add files to comments
+* [x] Resizing image of comment to 320x240
+* [x] Sanitize html in comment
+* [x] Filter comments
+* [x] Add files to comments
+
+* [x] Preview comment
+* [x] Pagination comments
+* [x] Displaying comments in realtime
 * [x] Client-side validation
 * [x] Error handling
-* [x] Search (basic)
+* [x] Search of posts (basic)
 * [x] Responsive design
 
 ## 📝 Notes
