@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from "axios";
 import { API_URL } from "../constants/api";
 import { getErrorMessage } from "./errors";
 
@@ -12,21 +10,23 @@ export interface CustomError {
 export const post = async (path: string, data: FormData | object) => {
 	const body =
 		data instanceof FormData ? Object.fromEntries(data.entries()) : data;
+	const response = await fetch(`${API_URL}/${path}`, {
+		method: "POST",
+		credentials: "include",
+		headers: {
+			Accept: "application/json",
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(body),
+	});
 
-	try {
-		const response = await axios.post(`${API_URL}/${path}`, body, {
-			withCredentials: true,
-			headers: {
-				Accept: "application/json",
-				"Content-Type": "application/json",
-			},
-		});
-		return { error: "", data: response.data };
-	} catch (error: any) {
-		return {
-			error: getErrorMessage(error.response?.data),
-		};
+	const parsedRes = await response.json();
+
+	if (!response.ok) {
+		return { error: getErrorMessage(parsedRes) };
 	}
+
+	return { error: "", data: parsedRes };
 };
 
 export const get = async <T>(
@@ -39,50 +39,67 @@ export const get = async <T>(
 			? `${API_URL}/${path}?${params.toString()}`
 			: `${API_URL}/${path}`;
 
-		const response = await axios.get<T>(url, {
-			withCredentials: true,
+		const response = await fetch(url, {
+			credentials: "include",
+			next: {
+				tags,
+			},
 		});
 
-		return response.data;
-	} catch (error: any) {
-		const status = error.response?.status;
-		return {
-			message: `Error: ${status} ${error.response?.statusText || ""}`,
-			statusCode: status,
-			details: error.message,
+		if (!response.ok) {
+			const error: CustomError = {
+				message: `Error: ${response.status} ${response.statusText}`,
+				statusCode: response.status,
+				details: `The request to ${url} failed with status code ${response.status}.`,
+			};
+			return error;
+		}
+
+		const data = await response.json();
+		return data as T;
+	} catch (error) {
+		const customError: CustomError = {
+			message: "Network error or server is unreachable.",
+			details: error instanceof Error ? error.message : "Unknown error.",
 		};
+		return customError;
 	}
 };
 
 export const deleteRequest = async (path: string, data?: object) => {
-	try {
-		const response = await axios.delete(`${API_URL}/${path}`, {
-			withCredentials: true,
-			data,
-			headers: {
-				"Content-Type": "application/json",
-			},
-		});
-		return { error: "", data: response.data };
-	} catch (error: any) {
-		return {
-			error: getErrorMessage(error.response?.data),
-		};
+	const response = await fetch(`${API_URL}/${path}`, {
+		method: "DELETE",
+		credentials: "include",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: data ? JSON.stringify(data) : undefined,
+	});
+
+	const parsedRes = await response.json();
+
+	if (!response.ok) {
+		return { error: getErrorMessage(parsedRes) };
 	}
+
+	return { error: "", data: parsedRes };
 };
 
 export const patch = async (path: string, data: object) => {
-	try {
-		const response = await axios.patch(`${API_URL}/${path}`, data, {
-			withCredentials: true,
-			headers: {
-				"Content-Type": "application/json",
-			},
-		});
-		return { error: "", data: response.data };
-	} catch (error: any) {
-		return {
-			error: getErrorMessage(error.response?.data),
-		};
+	const response = await fetch(`${API_URL}/${path}`, {
+		method: "PATCH",
+		credentials: "include",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(data),
+	});
+
+	const parsedRes = await response.json();
+
+	if (!response.ok) {
+		return { error: getErrorMessage(parsedRes) };
 	}
+
+	return { error: "", data: parsedRes };
 };
