@@ -30,40 +30,49 @@ export const post = async (path: string, data: FormData | object) => {
 };
 
 export const get = async <T>(
-	path: string,
-	tags?: string[],
-	params?: URLSearchParams
+  path: string,
+  tags?: string[],
+  params?: URLSearchParams
 ): Promise<T | CustomError> => {
-	try {
-		const url = params
-			? `${API_URL}/${path}?${params.toString()}`
-			: `${API_URL}/${path}`;
+  try {
+    const url = params
+      ? `${API_URL}/${path}?${params.toString()}`
+      : `${API_URL}/${path}`;
 
-		const response = await fetch(url, {
-			credentials: "include",
-			next: {
-				tags,
-			},
-		});
+    console.log("📡 GET request to:", url); // Лог адреси запиту
+    console.log("🧾 Tags:", tags); // Лог тегів (якщо є)
+    console.log("🧩 API_URL:", API_URL); // Лог змінної середовища
 
-		if (!response.ok) {
-			const error: CustomError = {
-				message: `Error: ${response.status} ${response.statusText}`,
-				statusCode: response.status,
-				details: `The request to ${url} failed with status code ${response.status}.`,
-			};
-			return error;
-		}
+    const response = await fetch(url, {
+      credentials: "include",
+      next: {
+        tags,
+      },
+    });
 
-		const data = await response.json();
-		return data as T;
-	} catch (error) {
-		const customError: CustomError = {
-			message: "Network error or server is unreachable.",
-			details: error instanceof Error ? error.message : "Unknown error.",
-		};
-		return customError;
-	}
+    console.log("📬 Response status:", response.status); // Статус відповіді
+
+    if (!response.ok) {
+      const error: CustomError = {
+        message: `Error: ${response.status} ${response.statusText}`,
+        statusCode: response.status,
+        details: `The request to ${url} failed with status code ${response.status}.`,
+      };
+      console.error("❌ Error response:", error); // Лог помилки
+      return error;
+    }
+
+    const data = await response.json();
+    console.log("✅ Response data:", data); // Дані з відповіді
+    return data as T;
+  } catch (error) {
+    const customError: CustomError = {
+      message: "Network error or server is unreachable.",
+      details: error instanceof Error ? error.message : "Unknown error.",
+    };
+    console.error("❗ Network or unexpected error:", customError);
+    return customError;
+  }
 };
 
 export const deleteRequest = async (path: string, data?: object) => {
