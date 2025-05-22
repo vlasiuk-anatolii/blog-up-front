@@ -30,7 +30,7 @@ export default async function login(_prevState: FormResponse, formData: FormData
 	redirect("/");
 }
 
-const setAuthCookie = async (response: Response) => {
+export const setAuthCookie = async (response: Response) => {
     const setCookieHeader = response.headers.get("Set-Cookie");
 
     if (setCookieHeader) {

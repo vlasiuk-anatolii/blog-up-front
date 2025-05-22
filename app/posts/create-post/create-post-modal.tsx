@@ -176,7 +176,6 @@ export default function CreatePostModal({
 							value={title}
 							onChange={(e) => {
 								setTitle(e.target.value);
-								console.log("Title changed:", e.target.value);
 							}}
 							helperText={error?.title}
 							error={!!error?.title}
@@ -188,7 +187,6 @@ export default function CreatePostModal({
 							value={content}
 							onChange={(e) => {
 								setContent(e.target.value);
-								console.log("Content changed:", e.target.value);
 							}}
 							helperText={error?.content}
 							error={!!error?.content}
@@ -200,7 +198,6 @@ export default function CreatePostModal({
 							value={urlImg}
 							onChange={(e) => {
 								setUrlImg(e.target.value);
-								console.log("URLImg changed:", e.target.value);
 							}}
 							helperText={error?.urlImg}
 							error={!!error?.urlImg}

@@ -1,34 +1,52 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { Card, Stack, Typography } from "@mui/material";
+import { useEffect } from "react";
+import { Box, Card, CircularProgress, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { Image } from "antd";
 import { styleCard } from "@/app/common/constants/styles";
 import { usePosts } from "@/app/store/usePosts";
 import CreateCommentFab from "../../comments/create-comment/create-comment-fab";
 import Comments from "@/app/comments/comments";
-import { useEffect } from "react";
 
 export default function SinglePost() {
 	const { postId } = useParams();
-	const { posts, loadComments } = usePosts();
+	const { posts, loading, error, loadPosts } = usePosts();
+	
+	useEffect(() => {
+		if (posts.length === 0) {
+			loadPosts();
+		}
+	}, [loadPosts, posts.length]);
 
 	const post = posts.find((p) => (p?.id ?? "").toString() === postId);
 
 	useEffect(() => {
-		if (post) {
-			loadComments({ postId: post?.id as number });
-		}
-	}, [post, loadComments]);
+		loadPosts();
+	}, [loadPosts]);
+
+	if (loading) {
+		return (
+			<Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+				<CircularProgress />
+			</Box>
+		);
+	}
+
+	if (error) {
+		return (
+			<Box sx={{ textAlign: "center", mt: 4 }}>
+				<Typography color="error">{error}</Typography>
+			</Box>
+		);
+	}
 
 	if (!post) {
 		return (
-			<Grid container marginBottom={"2rem"} rowGap={3}>
-				<Typography variant="h4" color="error">
-					Post not found
-				</Typography>
-			</Grid>
+			<Box sx={{ textAlign: "center", mt: 4 }}>
+				<Typography>No post available at the moment.</Typography>
+			</Box>
 		);
 	}
 
@@ -58,3 +76,4 @@ export default function SinglePost() {
 		</>
 	);
 }
+

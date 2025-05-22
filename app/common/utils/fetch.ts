@@ -38,19 +38,12 @@ export const get = async <T>(
     const url = params
       ? `${API_URL}/${path}?${params.toString()}`
       : `${API_URL}/${path}`;
-
-    console.log("📡 GET request to:", url); // Лог адреси запиту
-    console.log("🧾 Tags:", tags); // Лог тегів (якщо є)
-    console.log("🧩 API_URL:", API_URL); // Лог змінної середовища
-
     const response = await fetch(url, {
       credentials: "include",
       next: {
         tags,
       },
     });
-
-    console.log("📬 Response status:", response.status); // Статус відповіді
 
     if (!response.ok) {
       const error: CustomError = {
@@ -63,7 +56,6 @@ export const get = async <T>(
     }
 
     const data = await response.json();
-    console.log("✅ Response data:", data); // Дані з відповіді
     return data as T;
   } catch (error) {
     const customError: CustomError = {

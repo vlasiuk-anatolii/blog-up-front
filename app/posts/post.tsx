@@ -39,7 +39,7 @@ export default function Post({ post }: PostProps) {
 		e.stopPropagation();
 		const confirmDelete = window.confirm("Exactly delete the post?");
 		if (confirmDelete && post.id !== undefined) {
-			await removePost(post.id);
+			await removePost({id: post.id});
 			loadPosts();
 		}
 	};
