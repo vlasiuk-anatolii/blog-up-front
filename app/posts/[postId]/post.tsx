@@ -22,10 +22,6 @@ export default function SinglePost() {
 
 	const post = posts.find((p) => (p?.id ?? "").toString() === postId);
 
-	useEffect(() => {
-		loadPosts();
-	}, [loadPosts]);
-
 	if (loading) {
 		return (
 			<Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
