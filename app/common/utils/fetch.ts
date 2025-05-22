@@ -1,5 +1,6 @@
-import { API_URL } from "../constants/api";
+//import { API_URL } from "../constants/api";
 import { getErrorMessage } from "./errors";
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 export interface CustomError {
 	message: string;
