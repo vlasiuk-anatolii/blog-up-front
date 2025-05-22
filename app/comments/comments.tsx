@@ -138,7 +138,7 @@ export default function Comments({ comments }: CommentProps) {
 
 				{currentPageComments.map(
 					(
-						{ id, username, text, email, createdAt, fileName },
+						{ id, username, text, email, createdAt, fileName, homepage },
 						index
 					) => (
 						<div key={id} style={{ marginLeft: `${index * 10}px` }}>
@@ -148,6 +148,7 @@ export default function Comments({ comments }: CommentProps) {
 								date={createdAt || ""}
 								email={email}
 								fileName={fileName || ""}
+								homepage={homepage || undefined}
 							/>
 						</div>
 					)
