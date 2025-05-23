@@ -44,7 +44,7 @@ export default function CreateCommentModal({
 	const [preview, setPreview] = useState<string | null>(null);
 	const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
 	const [error, setError] = useState<{ [key: string]: string }>({});
-	const { commentOnPost, loadComments } = usePosts();
+	const { commentOnPost, loadPosts } = usePosts();
 	const { postId: postIdParam } = useParams();
 	const postId = Number(postIdParam);
 	const fileInputRef = useRef<HTMLInputElement>(null);
@@ -249,7 +249,7 @@ export default function CreateCommentModal({
 				fileName: uploadedFilename,
 			});
 
-			await loadComments({ postId });
+			loadPosts();
 			handleClose();
 		} catch (err: unknown) {
 			setError({

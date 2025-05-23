@@ -18,7 +18,6 @@ export async function uploadCommentFile(commentId: number, file: File) {
 
 	return await response.json();
 	} catch (error) {
-		console.log("🚀 ~ uploadCommentFile ~ error):", error);
 		throw new Error(
 			`Error uploading file: ${error instanceof Error ? error.message : String(error)}`
 		);	

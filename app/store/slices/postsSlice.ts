@@ -1,11 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import {
-	CustomError,
-	deleteRequest,
-	get,
-	patch,
-	post,
-} from "@/app/common/utils/fetch";
+import { CustomError, get } from "@/app/common/utils/fetch";
 import { Post, Comment } from "@/app/posts/interfaces/post.interface";
 
 interface PostsState {
@@ -25,8 +19,20 @@ const initialState: PostsState = {
 };
 
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
-	const response = await get<Post[]>("posts");
-	return response;
+	const response = await fetch("/posts", {
+		method: "GET",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		credentials: "include",
+	});
+
+	if (!response.ok) {
+		throw new Error(`Error ${response.status}: ${response.statusText}`);
+	}
+
+	const data: Post[] = await response.json();
+	return data;
 });
 
 export const createPost = createAsyncThunk(
@@ -35,13 +41,36 @@ export const createPost = createAsyncThunk(
 		data: { title: string; content: string; urlImg: string },
 		thunkAPI
 	) => {
-		const formData = new FormData();
-		formData.append("title", data.title);
-		formData.append("content", data.content);
-		formData.append("urlImg", data.urlImg);
-		const response = await post("posts", formData);
-		if (response.error) return thunkAPI.rejectWithValue(response.error);
-		return response.data as Post;
+		const payload = {
+			title: data.title,
+			content: data.content,
+			urlImg: data.urlImg,
+		};
+
+		try {
+			const response = await fetch("/posts", {
+				method: "POST",
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
+
+				body: JSON.stringify(payload),
+			});
+
+			if (!response.ok) {
+				const errorData = await response.json();
+				return thunkAPI.rejectWithValue(
+					errorData.error || "Failed to create post"
+				);
+			}
+
+			const responseData = await response.json();
+			return responseData as Post;
+		} catch {
+			return thunkAPI.rejectWithValue("Network error");
+		}
 	}
 );
 
@@ -51,32 +80,60 @@ export const updatePost = createAsyncThunk(
 		data: { id: number; title?: string; content?: string; urlImg?: string },
 		thunkAPI
 	) => {
-		const response = await patch(`posts/${data.id}`, data);
-		if (response.error) return thunkAPI.rejectWithValue(response.error);
-		return response.data as Post;
+		try {
+			const response = await fetch(`/posts`, {
+				method: "PATCH",
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
+
+				body: JSON.stringify(data),
+			});
+
+			if (!response.ok) {
+				const errorData = await response.json();
+				return thunkAPI.rejectWithValue(
+					errorData.error || "Failed to create post"
+				);
+			}
+
+			const responseData = await response.json();
+			return responseData as Post;
+		} catch {
+			return thunkAPI.rejectWithValue("Network error");
+		}
 	}
 );
 
 export const deletePost = createAsyncThunk(
 	"posts/deletePost",
-	async (id: number, thunkAPI) => {
-		const response = await deleteRequest(`posts/${id}`);
-		if (response.error) return thunkAPI.rejectWithValue(response.error);
-		if (response.data) {
-			thunkAPI.dispatch(fetchPosts());
-		}
-		return id;
-	}
-);
+	async (data: { id: number }, thunkAPI) => {
+		try {
+			const response = await fetch(`/posts`, {
+				method: "DELETE",
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
 
-export const fetchComments = createAsyncThunk(
-	"posts/fetchComments",
-	async (postId: number, thunkAPI) => {
-		const response = await get<Comment[]>(`comments`);
-		if ("data" in response && Array.isArray(response.data)) {
-			return { postId, comments: response.data as Comment[] };
+				body: JSON.stringify(data),
+			});
+
+			if (!response.ok) {
+				const errorData = await response.json();
+				return thunkAPI.rejectWithValue(
+					errorData.error || "Failed to create post"
+				);
+			}
+
+			const responseData = await response.json();
+			return responseData as Post;
+		} catch {
+			return thunkAPI.rejectWithValue("Network error");
 		}
-		return thunkAPI.rejectWithValue("Unexpected response format");
 	}
 );
 
@@ -93,24 +150,41 @@ export const addComment = createAsyncThunk(
 		},
 		thunkAPI
 	) => {
-		const formData = new FormData();
-		formData.append("postId", data.postId.toString());
-		formData.append("username", data.username);
-		formData.append("email", data.email);
-		if (data.homepage) {
-			formData.append("homepage", data.homepage);
+		const payload = {
+			postId: data.postId,
+			username: data.username,
+			email: data.email,
+			homepage: data.homepage || null,
+			text: data.text,
+			fileName: data.fileName || "",
+		};
+		
+		try {
+			const response = await fetch("/comments", {
+				method: "POST",
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
+
+				body: JSON.stringify(payload),
+			});
+
+			if (!response.ok) {
+				const errorData = await response.json();
+				return thunkAPI.rejectWithValue(
+					errorData.error || "Failed to create comment"
+				);
+			}
+
+			const responseData = await response.json();
+			return { postId: data.postId, comment: responseData as Comment };
+		} catch {
+			return thunkAPI.rejectWithValue("Network error");
 		}
-		formData.append("text", data.text);
-		if (data.fileName) {
-			formData.append("fileName", data.fileName);
-		}
-		const response = await post(`comments`, formData);
-		if (response.error) return thunkAPI.rejectWithValue(response.error);
-		return { postId: data.postId, comment: response.data as Comment };
 	}
 );
-		
-		
 
 export const searchPosts = createAsyncThunk(
 	"posts/searchPosts",
@@ -137,8 +211,8 @@ const postsSlice = createSlice({
 	initialState,
 	reducers: {
 		setRecaptchaReady: (state, action: PayloadAction<boolean>) => {
-		state.isRecaptchaReady = action.payload;
-	},
+			state.isRecaptchaReady = action.payload;
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -183,31 +257,10 @@ const postsSlice = createSlice({
 			)
 			.addCase(
 				deletePost.fulfilled,
-				(state, action: PayloadAction<number>) => {
+				(state, action: PayloadAction<Post>) => {
 					state.items = state.items.filter(
-						(p) => p.id !== action.payload
+						(p) => p.id !== action.payload.id
 					);
-				}
-			)
-			.addCase(fetchComments.pending, (state) => {
-				state.loading = true;
-			})
-			.addCase(
-				fetchComments.fulfilled,
-				(
-					state,
-					action: PayloadAction<{
-						postId: number;
-						comments: Comment[];
-					}>
-				) => {
-					state.loading = false;
-					const post = state.items.find(
-						(p) => p.id === action.payload.postId
-					);
-					if (post) {
-						post.comments = action.payload.comments;
-					}
 				}
 			)
 			.addCase(

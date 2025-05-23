@@ -5,7 +5,6 @@ import {
   updatePost,
   deletePost,
   addComment,
-  fetchComments,
   searchPosts
 } from './slices/postsSlice';
 import { useCallback } from 'react';
@@ -24,7 +23,6 @@ export const usePosts = () => {
 
   const createNewPost = useCallback(
     (data: { title: string; content: string, urlImg: string }) => {
-      console.log("🚀 ~ pered dispatchem", data)
       return dispatch(createPost(data));
     },
     [dispatch]
@@ -38,8 +36,8 @@ export const usePosts = () => {
   );
 
   const removePost = useCallback(
-    (id: number) => {
-      return dispatch(deletePost(id));
+    (data: { id: number }) => {
+      return dispatch(deletePost(data));
     },
     [dispatch]
   );
@@ -47,13 +45,6 @@ export const usePosts = () => {
   const commentOnPost = useCallback(
     (data: { postId: number; username: string; email: string; homepage?: string; text: string; fileName?: string }) => {
       return dispatch(addComment(data));
-    },
-    [dispatch]
-  );
-
-  const loadComments = useCallback(
-    (data: { postId: number }) => {
-      return dispatch(fetchComments(data.postId));
     },
     [dispatch]
   );
@@ -75,7 +66,6 @@ export const usePosts = () => {
     updateExistingPost,
     removePost,
     commentOnPost,
-    loadComments,
     performSearch,
   };
 };
